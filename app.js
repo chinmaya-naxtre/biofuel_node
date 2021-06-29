@@ -3,6 +3,7 @@ const axios = require("axios")
 const PORT = process.env.PORT || 3002
 const moment = require("moment")
 const cors = require('cors')
+const cheerio = require('cheerio')
 
 const app = express()
 app.use(cors())
@@ -34,6 +35,25 @@ app.get("/fuel_price", (req, res) => {
         let data = x.substring(pos + 18, pos + 23)
         console.log(data)
         res.send({ price: data })
+    })
+})
+
+
+app.get("/diesel_price", (req, res) => {
+    axios.get("https://www.bankbazaar.com/fuel/diesel-price-india.html").then(result => {
+        const $ = cheerio.load(result.data)
+        const scrappedData = []
+
+        $("#grey-btn > div > div > table > tbody > tr").each((index, element) => {
+
+            const city = $(element).find("a").text()
+            const price = $($(element).find("td")[1]).text()
+
+            const tableRow = { city, price }
+            scrappedData.push(tableRow)
+        })
+        var jsonData = JSON.parse(JSON.stringify(scrappedData))
+        res.send(jsonData)
     })
 })
 
