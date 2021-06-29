@@ -52,7 +52,8 @@ app.get("/diesel_price", (req, res) => {
             const tableRow = { city, price }
             scrappedData.push(tableRow)
         })
-        var jsonData = JSON.parse(JSON.stringify(scrappedData))
+        let jsonData = JSON.parse(JSON.stringify(scrappedData))
+        jsonData=jsonData.slice(1)
         res.send(jsonData)
     })
 })
