@@ -1,63 +1,119 @@
-const express = require("express")
-const axios = require("axios")
-const PORT = process.env.PORT || 3002
-const moment = require("moment")
-const cors = require('cors')
-const cheerio = require('cheerio')
+const express = require("express");
+const axios = require("axios");
+const PORT = process.env.PORT || 3002;
+const cors = require("cors");
+const cheerio = require("cheerio");
+const stateData = require("./doc.json");
+const bodyParser = require("body-parser");
 
-const app = express()
-app.use(cors())
+let jsonData;
+
+const app = express();
+app.use(express.static("public"));
+
+app.use(cors());
+
+app.set("view engine", "ejs");
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
 
 app.get("/last_days/:dayCount", (req, res) => {
-    let day
-    if (req.params.dayCount <= 0) {
-        day = 1
-    } else {
-        day = req.params.dayCount
-    }
-    axios.get("https://www.bankbazaar.com/fuel/fetchCommodityPriceHistory.html?landingPageNamespace=fuel/diesel-price-punjab&daysCount=" + day).then((result) => {
-        if (result) {
-            // console.log(result.data)
-            let data = result.data
-            let disel = data.Diesel
-            console.log(disel)
-            console.log(moment().format("YYYY MM DD"))
-            res.send(disel)
-        }
-    })
-})
+  let day;
+  if (req.params.dayCount <= 0) {
+    day = 1;
+  } else {
+    day = req.params.dayCount;
+  }
+  axios
+    .get(
+      "https://www.bankbazaar.com/fuel/fetchCommodityPriceHistory.html?landingPageNamespace=fuel/diesel-price-punjab&daysCount=" +
+        day
+    )
+    .then((result) => {
+      if (result) {
+        // console.log(result.data)
+        let data = result.data;
+        let disel = data.Diesel;
+        res.send(disel);
+      }
+    });
+});
 
 app.get("/fuel_price", (req, res) => {
-    axios.get("https://www.bankbazaar.com/fuel/diesel-price-punjab.html").then(result => {
-        // console.log(result.data)
-        let x = result.data
-        let pos = x.search("bigfont")
-        let data = x.substring(pos + 18, pos + 23)
-        console.log(data)
-        res.send({ price: data })
-    })
-})
+  axios
+    .get("https://www.bankbazaar.com/fuel/diesel-price-punjab.html")
+    .then((result) => {
+      let x = result.data;
+      let pos = x.search("bigfont");
+      let data = x.substring(pos + 18, pos + 23);
+      res.send({ price: data });
+    });
+});
 
+app.get("/", (req, res) => {
+  let stateName;
+  let states;
 
-app.get("/diesel_price", (req, res) => {
-    axios.get("https://www.bankbazaar.com/fuel/diesel-price-india.html").then(result => {
-        const $ = cheerio.load(result.data)
-        const scrappedData = []
+  axios
+    .get("https://www.bankbazaar.com/fuel/diesel-price-india.html")
+    .then((result) => {
+      const $ = cheerio.load(result.data);
+      const scrappedData = [];
 
-        $("#grey-btn > div > div > table > tbody > tr").each((index, element) => {
+      $("#grey-btn > div > div > table > tbody > tr").each((index, element) => {
+        const city = $(element).find("a").text();
+        const price = $($(element).find("td")[1]).text();
 
-            const city = $(element).find("a").text()
-            const price = $($(element).find("td")[1]).text()
+        const tableRow = { city, price };
+        scrappedData.push(tableRow);
+      });
+      jsonData = JSON.parse(JSON.stringify(scrappedData));
+      states = stateData;
+      stateName = Object.keys(states);
+      //  res.render('pages/oil-prices', { keys: stateName })
+      res.render("pages/home", { keys: stateName });
+    });
+});
 
-            const tableRow = { city, price }
-            scrappedData.push(tableRow)
-        })
-        let jsonData = JSON.parse(JSON.stringify(scrappedData))
-        jsonData=jsonData.slice(1)
-        res.send(jsonData)
-    })
-})
+app.post("/fuel_price_by_state", async (req, res) => {
+  //   console.log(jsonData);
+  const states = stateData;
+  const allCities = JSON.parse(JSON.stringify(jsonData));
+  allCities.splice(0, 1);
+
+  const stateNames = Object.keys(states); //list of states from json file
+  const stateName = req.body.selectpicker; //state name from url body , from user request
+  const stateWiseCities = states[stateName]; // statewise cities
+  const scrappedData = [];
+  const stateWiseCityFuelPrices = [];
+
+  await axios
+    .get("https://www.bankbazaar.com/fuel/diesel-price-" + stateName + ".html")
+    .then((result) => {
+      let x = result.data;
+      let pos = x.search("bigfont");
+      let data = x.substring(pos + 18, pos + 23);
+      const state = stateName;
+      const price = data;
+      const tableRow = { state, price };
+      scrappedData.push(tableRow);
+    });
+
+  for (let i = 0; i < stateWiseCities.length; i++) {
+    let cityVal = stateWiseCities[i].toUpperCase();
+    const result = allCities.find(({ city }) => city === cityVal);
+    stateWiseCityFuelPrices.push(result);
+  }
+  res.json({
+    stateWithPrice: scrappedData,
+    cityWithPrice: stateWiseCityFuelPrices,
+  });
+  // res.render('pages/oil-price-by-state', { stateWithPrice: scrappedData, cityWithPrice: stateWiseCityFuelPrices })
+});
 
 app.listen(PORT, () => {
-    console.log("App is running at", PORT)
-})
+  console.log("App is running at", PORT);
+});

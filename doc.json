@@ -1,0 +1,49 @@
+{
+    "andhra-pradesh": ["guntur", "kakinada", "kurnool", "nellore", "visakhapatnam"],
+    "assam": ["guwahati"],
+    "bihar": ["patna"],
+    "chhattisgarh": ["raipur"],
+    "gujarat": [
+        "ahmedabad", "jamnagar", "rajkot", "surat", "vadodara"
+    ],
+    "haryana": [
+        "ambala", "faridabad","gurgaon", "karnal"
+    ],
+    "himachal-pradesh": ["shimla"],
+    "jammu-and-kashmir": [],
+    "jharkhand": ["jamshedpur"],
+    "karnataka": [
+        "bangalore",
+        "belgaum","gulbarga", "mangalore", "mysore", "shimoga", "udupi"
+    ],
+    "kerala": ["kannur", "kozhikode", "malappuram", "thiruvananthapuram", "thrissur"],
+    "madhya-pradesh": [
+        "bhopal", "indore", "jabalpur", "ratlam"
+    ],
+    "maharashtra": [
+        "amravati",
+        "aurangabad", "jalgaon", "kolhapur", "mumbai", "nagpur", "nanded", "pune", "sangli", "solapur", "thane"
+    ],
+    "odisha": [
+        "bhubaneshwar","cuttack"
+    ],
+    "punjab": ["ludhiana"],
+    "rajasthan": ["jaipur", "jodhpur", "kota", "ranchi", "udaipur"],
+    "tamil-nadu": ["chennai", "coimbatore", "dindigul", "erode", "karur", "madurai", "nagercoil", "salem",
+        "thanjavur", "tirunelveli", "vellore"
+    ],
+    "telangana": ["hyderabad", "warangal"],
+    "uttar-pradesh": [
+        "agra",
+        "aligarh",
+        "allahabad",
+        "bareilly", "ghaziabad", "kanpur", "lucknow", "meerut", "noida", "varanasi"
+    ],
+    "uttarakhand": ["dehradun"],
+    "west-bengal": ["kolkata"],
+    "chandigarh":[],
+    "jammu":[],
+    "delhi":[],
+    "pondicherry":[],
+    "srinagar":[]
+}
