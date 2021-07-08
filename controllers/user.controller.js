@@ -6,6 +6,7 @@ module.exports = {
     let username = req.body.username;
     let password = req.body.password;
     let token;
+    username = username.toLowerCase();
     adminDb.find({}).exec((err, result) => {
       console.log(req.body);
     });
