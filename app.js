@@ -6,6 +6,27 @@ const cheerio = require("cheerio");
 const stateData = require("./doc.json");
 const bodyParser = require("body-parser");
 
+require("./db");
+
+const cron = require("node-cron");
+const { sendEmail } = require("./controllers/email.controller");
+cron.schedule("0 1 * * *", () => {
+  sendEmail;
+});
+
+//  var cron = require("node-cron");
+
+//  cron.schedule(
+//    "0 1 * * *",
+//    () => {
+//      console.log("Running a job at 01:00 at Asia/Kolkata timezone");
+//    },
+//    {
+//      scheduled: true,
+//      timezone: "Asia/Kolkata",
+//    }
+//  );
+
 let jsonData;
 
 const app = express();
@@ -19,6 +40,14 @@ app.use(
     extended: true,
   })
 );
+app.use(bodyParser.json());
+app.get("/sendmail", (req, res) => {
+  sendEmail;
+});
+
+app.use("/user", require("./routes/user"));
+app.use("/diesel", require("./routes/diesel"));
+app.use("/calculator", require("./routes/calculator"));
 
 app.get("/last_days/:dayCount", (req, res) => {
   let day;
