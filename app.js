@@ -10,8 +10,13 @@ require("./db");
 
 const cron = require("node-cron");
 const { sendEmail } = require("./controllers/email.controller");
-cron.schedule("0 1 * * *", () => {
-  sendEmail;
+cron.schedule("4 * * * *", () => {
+  axios
+    .get("https://current-fuel-price.herokuapp.com/diesel/updateNewPrice")
+    .then((result) => {
+      console.log(result);
+      sendEmail;
+    });
 });
 
 //  var cron = require("node-cron");
