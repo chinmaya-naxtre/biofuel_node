@@ -1,5 +1,6 @@
 const { localDb } = require("../db");
 const { calculateBioFuel } = require("./common.controller");
+const moment=require('moment')
 
 module.exports = {
   updateFormula: (req, res) => {
@@ -9,7 +10,7 @@ module.exports = {
         discount: req.body.discount,
         gst: req.body.gst,
         freight: req.body.freight,
-        date: "08-07-2021",
+        date: moment().format("DD-MM-YYYY")
       },
       (err, ress) => {
         console.log(ress);

@@ -1,26 +1,19 @@
-{"state":"HARYANA","cities":["AMBALA","FARIDABAD","GURGAON","KARNAL"],"dieselPrice":"89.31","date":"08-07-2021","_id":"5hAezJgocJ0cfweo"}
-{"state":"KARNATAKA","cities":["BANGALORE","BELGAUM"," GULBARGA"," MANAGALORE","MYSORE","SHIMOGA","UDUPI"],"dieselPrice":"95.05","date":"08-07-2021","_id":"6EogL8c4PRezKGGt"}
-{"state":"KERALA","cities":["THRUVANANTHPURAM","KANNUR","KOZHIKODE","MALAPPURAM","THRISSUR"],"dieselPrice":"96.26","date":"08-07-2021","_id":"6N4FfhQito38D6xS"}
-{"state":"ANDHRA-PRADESH","cities":["VISAKHAPATNAM","GUNTUR","KAKINADA","KURNOOL","NELLORE"],"dieselPrice":"97.74","date":"08-07-2021","_id":"ASdv1DdgCq0OomyP"}
-{"state":"RAJASTHAN","cities":["JAIPUR","JODHPUR","KOTA","UDAIPUR"],"dieselPrice":"98.8","date":"08-07-2021","_id":"Aw9YRbySVei1nujB"}
-{"state":"WEST-BENGAL","cities":["KOLKATA"],"dieselPrice":"92.71","date":"08-07-2021","_id":"BPP2sv4iZ5aG3df5"}
-{"state":"GUJARAT","cities":["AHMEDABAD","JAMNAGAR","RAJKOT","SURAT","VADODARA"],"dieselPrice":"96.54","date":"08-07-2021","_id":"CKd3BNxv4KN9DLIs"}
-{"state":"CHHATTISGARH","cities":["RAIPUR"],"dieselPrice":"96.97","date":"08-07-2021","_id":"GS61ZSoqGDMhGRa5"}
-{"state":"JAMMU-AND-KASHMIR","cities":["NO CITIES FOUND"],"dieselPrice":"93.29","date":"08-07-2021","_id":"WpoywB6vw6a8bJxa"}
-{"state":"BIHAR","cities":["PATNA"],"dieselPrice":"95.2","date":"08-07-2021","_id":"Yzd14pnKiQ7kyLcu"}
-{"state":"MAHARASHTRA","cities":["MUMBAI","AMRAVATI","AURANGABAD","JALGAON","KOLHAPUR","NANDED","PUNE","SANGLI","SOLAPUR","THANE"],"dieselPrice":"97.24","date":"08-07-2021","_id":"Z8Oro9uKrpSXHWhH"}
-{"state":"MADHYA-PRADESH","cities":["BHOPAL","INDORE","JABALPUR","RATLAM"],"dieselPrice":"98.46","date":"08-07-2021","_id":"aR2yopUNsO3r99xx"}
-{"state":"UTTAR-PRADESH","cities":["LUCKNOW","AGRA","ALIGARH","ALLAHABAD","BAREILLY","GHAZIABAD","KANPUR","MEERUT","NOIDA","VARANASI"],"dieselPrice":"90.06","date":"08-07-2021","_id":"cX7nuvhAgYroh9z9"}
-{"state":"SRINAGAR","cities":["NO CITIES FOUND"],"dieselPrice":"93.29","date":"08-07-2021","_id":"czSa6uv2cjuLjeen"}
-{"state":"PUNJAB","cities":["LUDHIANA"],"dieselPrice":"89.31","date":"08-07-2021","_id":"dW69GrUdyfa4bKxG"}
-{"state":"HIMACHAL-PRADESH","cities":["SHIMLA"],"dieselPrice":"88.76","date":"08-07-2021","_id":"dlpQ8AYT7Zo0sxzb"}
-{"state":"TAMIL-NADU","cities":["CHENNAI","COIMBATOR","DINDIGUL","ERODE","KARUR","MADURAI","NAGARCOIL","SALEM","THANJAVUR","TIRUNELVELI","VELLORE"],"dieselPrice":"94.2","date":"08-07-2021","_id":"drSJFRzrXZiqoHZB"}
-{"state":"UTTARAKHAND","cities":["DEHRADUN"],"dieselPrice":"90.37","date":"08-07-2021","_id":"hGCQYlf1kqJNKWCK"}
-{"state":"CHANDIGARH","cities":["NO CITIES FOUND"],"dieselPrice":"89.31","date":"08-07-2021","_id":"iG99KMbZnOFhBenj"}
-{"state":"ODISHA","cities":["BHUBANESHWAR","CUTTACK"],"dieselPrice":"97.73","date":"08-07-2021","_id":"ibQfs4ibq3UDS4Ob"}
-{"state":"DELHI","cities":["NO CITIES FOUND"],"dieselPrice":"89.68","date":"08-07-2021","_id":"jcvTiQRcf1BYlNYP"}
-{"state":"JHARKHAND","cities":["RANCHI","JAMSHEDPUR"],"dieselPrice":"94.73","date":"08-07-2021","_id":"kTJ4gN2btFek1gLa"}
-{"state":"JAMMU","cities":["NO CITIES FOUND"],"dieselPrice":"90.24","date":"08-07-2021","_id":"kajbCBEcntH3b5YW"}
-{"state":"PONDICHERRY","cities":["NO CITIES FOUND"],"dieselPrice":"93.31","date":"08-07-2021","_id":"lLpGSPTyxH6Na93z"}
-{"state":"ASSAM","cities":["GUWAHATI"],"dieselPrice":"89.01","date":"08-07-2021","_id":"rchTHSz5kJiBkLIr"}
-{"state":"TELANGANA","cities":["HYDERABAD","WARANGAL"],"dieselPrice":"97.74","date":"08-07-2021","_id":"usl29IlMpL3huzkl"}
+{"state":"MADHYA-PRADESH","cities":["BHOPAL","INDORE","JABALPUR","RATLAM"],"dieselPrice":"98.56","date":"14-07-2021","_id":"2U0dbhmMbTPnXq1o"}
+{"state":"GUJARAT","cities":["AHMEDABAD","JAMNAGAR","RAJKOT","SURAT","VADODARA"],"dieselPrice":"96.65","date":"14-07-2021","_id":"4WRN3NHQxIshQEPL"}
+{"state":"HIMACHAL-PRADESH","cities":["SHIMLA"],"dieselPrice":"88.85","date":"14-07-2021","_id":"9hmmoSfeHSpRVbsI"}
+{"state":"KERALA","cities":["THRUVANANTHPURAM","KANNUR","KOZHIKODE","MALAPPURAM","THRISSUR"],"dieselPrice":"96.36","date":"14-07-2021","_id":"Aay0BUryA6DVVtO6"}
+{"state":"MAHARASHTRA","cities":["MUMBAI","AMRAVATI","AURANGABAD","JALGAON","KOLHAPUR","NANDED","PUNE","SANGLI","SOLAPUR","THANE"],"dieselPrice":"97.35","date":"14-07-2021","_id":"CYxHgAnXFDI8u4QW"}
+{"state":"PONDICHERRY","cities":["NO CITIES FOUND"],"dieselPrice":"93.41","date":"14-07-2021","_id":"EMhWgVV8nuzupzwk"}
+{"state":"SRINAGAR","cities":["NO CITIES FOUND"],"dieselPrice":"93.39","date":"14-07-2021","_id":"MbaMhMlk4hZ10pBp"}
+{"state":"KARNATAKA","cities":["BANGALORE","BELGAUM"," GULBARGA"," MANAGALORE","MYSORE","SHIMOGA","UDUPI"],"dieselPrice":"95.15","date":"14-07-2021","_id":"OnrUYy2R2opCyMVV"}
+{"state":"ODISHA","cities":["BHUBANESHWAR","CUTTACK"],"dieselPrice":"97.84","date":"14-07-2021","_id":"QOt3WMlDjj5CpKNa"}
+{"state":"JAMMU","cities":["NO CITIES FOUND"],"dieselPrice":"90.34","date":"14-07-2021","_id":"QqvC5DkXwxQNW5pZ"}
+{"state":"CHHATTISGARH","cities":["RAIPUR"],"dieselPrice":"97.07","date":"14-07-2021","_id":"W90Ly5ZCZG9N4MXT"}
+{"state":"ASSAM","cities":["GUWAHATI"],"dieselPrice":"89.11","date":"14-07-2021","_id":"bGuVL1yUsQi2oISK"}
+{"state":"DELHI","cities":["NO CITIES FOUND"],"dieselPrice":"89.78","date":"14-07-2021","_id":"bmiK3ArcB7Ji1TLL"}
+{"state":"JAMMU-AND-KASHMIR","cities":["NO CITIES FOUND"],"dieselPrice":"93.39","date":"14-07-2021","_id":"ewgtT3ZZvMB62exX"}
+{"state":"HARYANA","cities":["AMBALA","FARIDABAD","GURGAON","KARNAL"],"dieselPrice":"89.41","date":"14-07-2021","_id":"mCce98mciS31qW8W"}
+{"state":"BIHAR","cities":["PATNA"],"dieselPrice":"95.36","date":"14-07-2021","_id":"mT467WfrK2dkFXhq"}
+{"state":"ANDHRA-PRADESH","cities":["VISAKHAPATNAM","GUNTUR","KAKINADA","KURNOOL","NELLORE"],"dieselPrice":"97.85","date":"14-07-2021","_id":"nxVnfszjdDH3jYrX"}
+{"state":"PUNJAB","cities":["LUDHIANA"],"dieselPrice":"89.41","date":"14-07-2021","_id":"pgQQyGcSzO1WvJzy"}
+{"state":"JHARKHAND","cities":["RANCHI","JAMSHEDPUR"],"dieselPrice":"94.83","date":"14-07-2021","_id":"uO8hXvqQAYAVmC0p"}

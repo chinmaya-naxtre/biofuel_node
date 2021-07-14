@@ -4,7 +4,7 @@ const moment = require("moment");
 const { cityDb, stateDb } = require("../db");
 const stateData = require("../doc.json");
 const globalVar = require("../global.json");
-const { calculateBioFuel } = require("./common.controller");
+const { calculateBioFuel,calculateBioFuelPrice } = require("./common.controller");
 
 const getCityData = (city) => {
   return new Promise((resolve, reject) => {
@@ -31,51 +31,47 @@ module.exports = {
     let today = moment().format("DD-MM-YYYY");
     const states = stateData;
     const stateNames = Object.keys(stateData);
-    let responseData;
+    let responseData={};
     stateDb.find({ date: today }, async function (err, docs) {
-      // console.log(docs);
-      if (docs.length === 0) {
-        for (let i = 0; i < stateNames.length; i++) {
-          const stateName = stateNames[i];
-          let cities = states[stateName];
+      if (docs.length > 0) {
+        stateDb.remove({ date: today }, {multi: true}, function (err, numRemoved) {
+         console.log(numRemoved)
+        });
+      }
+      stateDb.loadDatabase()
+      for (let i = 0; i < stateNames.length; i++) {
+        const stateName = stateNames[i];
+        let cities = states[stateName];
 
-          await axios
-            .get(
-              "https://www.bankbazaar.com/fuel/diesel-price-" +
-                stateName +
-                ".html"
-            )
-            .then((result) => {
-              let x = result.data;
-              let pos = x.search("bigfont");
-              let data = x.substring(pos + 18, pos + 23);
-              const state = stateName.toLocaleUpperCase();
-              let dieselPrice = data;
+        await axios
+          .get(
+            "https://www.bankbazaar.com/fuel/diesel-price-" +
+              stateName +
+              ".html"
+          )
+          .then((result) => {
+            let x = result.data;
+            let pos = x.search("bigfont");
+            let data = x.substring(pos + 18, pos + 23);
+            const state = stateName.toLocaleUpperCase();
+            let dieselPrice = data;
 
-              if (dieselPrice.includes("<")) {
-                dieselPrice = dieselPrice.slice(0, dieselPrice.length - 1);
-              }
+            if (dieselPrice.includes("<")) {
+              dieselPrice = dieselPrice.slice(0, dieselPrice.length - 1);
+            }
 
-              const stateCities = cities;
+            const stateCities = cities;
 
-              stateDb.insert({
-                state,
-                cities,
-                dieselPrice,
-                date: today,
-              });
+            stateDb.insert({
+              state,
+              cities,
+              dieselPrice,
+              date: today,
             });
-        }
-
-        responseData = {
-          success: true,
-          message: "New Data Inserted",
-        };
-      } else {
-        responseData = {
-          success: false,
-          message: "No Data Inserted",
-        };
+          });
+      }
+      responseData={
+        message:"Price Updated"
       }
 
       res.status(200).json(responseData);
@@ -89,8 +85,13 @@ module.exports = {
     const stateNames = Object.keys(states);
     let today = moment().format("DD-MM-YYYY");
     cityDb.find({ date: today }, function (err, docs) {
-      if (docs.length === 0) {
-        axios
+      if (docs.length > 0) {
+        cityDb.remove({ date: today }, {multi: true}, function (err, numRemoved) {
+          console.log(numRemoved)
+         });
+      } 
+      cityDb.loadDatabase()
+      axios
           .get("https://www.bankbazaar.com/fuel/diesel-price-india.html")
           .then((result) => {
             const $ = cheerio.load(result.data);
@@ -118,13 +119,36 @@ module.exports = {
 
             res.status(200).send({ message: "City price updated" });
           });
-      } else {
-        res.status(200).send({ message: "No price updated" });
-      }
     });
   },
+
+
+  getInitialPrice:async(req, res)=>{
+    let today = moment().format("DD-MM-YYYY");
+    await stateDb
+      .find({ date: today })
+      .sort({ state: 1 })
+      .exec(async function (err, docs) {
+        // console.log(docs);
+        let data = [];
+        for (const element of docs) {
+          let bioDieselPrice = await calculateBioFuelPrice(element.dieselPrice);
+
+          let newData = element;
+          newData.bioDieselPrice = bioDieselPrice;
+          newData.stateBioDieselPrice = bioDieselPrice.totalPrice;
+
+          data.push(newData);
+        }
+        // console.log(data);
+        await res.json(data);
+      });
+  },
+
+
   getStateDieselPrice: async (req, res) => {
     let today = moment().format("DD-MM-YYYY");
+    
     // console.log(today);
     await stateDb
       .find({ date: today })
@@ -170,7 +194,7 @@ module.exports = {
       let data;
       if (result.length > 0) {
         let price = result[0].price;
-        const bioDieselPrice = await calculateBioFuel(price);
+        const bioDieselPrice = await calculateBioFuelPrice(price);
         data = {
           success: true,
           data: {
@@ -181,7 +205,7 @@ module.exports = {
       } else {
         data = {
           success: false,
-          message: "This City price can be access",
+          message: "This City price can not be access",
         };
       }
       res.status(200).send(data);
@@ -192,8 +216,9 @@ module.exports = {
     axios
       .get(globalVar.localBaseUrl + "diesel/loadDieselPriceByState")
       .then((result) => {
+        console.log(result)
         if (result.status == 200) {
-          console.log("ok");
+          
           axios
             .get(globalVar.localBaseUrl + "diesel/LoadDieselPriceByCity")
             .then((result1) => {
@@ -211,4 +236,29 @@ module.exports = {
         console.log(error);
       });
   },
+
+  searchStateCity:async (req, res)=>{
+    let keyword=req.params.keyword
+    let searchVal = new RegExp(keyword, "i")
+    let stateSearch=[{ state: { $regex: searchVal } },{ cities: { $regex: searchVal } }]
+    let today = moment().format("DD-MM-YYYY");
+    await stateDb
+      .find({$or:stateSearch})
+      .sort({ state: 1 })
+      .exec(async function (err, docs) {
+        let data = [];
+        for (const element of docs) {
+          let bioDieselPrice = await calculateBioFuelPrice(element.dieselPrice);
+
+          let newData = element;
+          newData.bioDieselPrice = bioDieselPrice;
+          newData.stateBioDieselPrice = bioDieselPrice.totalPrice;
+
+          data.push(newData);
+        }
+        // console.log(data);
+        await res.json(data);
+      });
+
+  }
 };

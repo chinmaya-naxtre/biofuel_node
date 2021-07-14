@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const { adminDb } = require("../db");
 module.exports = {
   authunticate: (req, res, next) => {
-    console.log("--------------------------------------");
     const token = req.headers.authorization;
     console.log(token);
     jwt.verify(
@@ -10,7 +9,7 @@ module.exports = {
       "iy68iy6uu76577uhyu86ykyu76jtr6jfdetuugf5y76y5yh",
       (err, decode) => {
         if (err) {
-          res.status(500).send({ message: err.message });
+          res.status(401).send({ message: err.message });
         }
         console.log(decode);
         const username = decode.username;

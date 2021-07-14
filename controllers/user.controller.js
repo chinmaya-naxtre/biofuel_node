@@ -17,13 +17,16 @@ module.exports = {
         let response;
         if (docs.length > 0) {
           let payload = { username: username };
-          (token = jwt.sign(
-            {
-              username: username,
-            },
-            "iy68iy6uu76577uhyu86ykyu76jtr6jfdetuugf5y76y5yh"
-          )),
-            { expiresIn: "1h" };
+          // (token = jwt.sign(
+          //   {
+          //     username: username,
+          //   },
+          //   "iy68iy6uu76577uhyu86ykyu76jtr6jfdetuugf5y76y5yh"
+          // )),
+          //   { expiresIn: "1h" };
+          token=jwt.sign({
+            username: username
+          }, 'iy68iy6uu76577uhyu86ykyu76jtr6jfdetuugf5y76y5yh', { expiresIn: '1h' });
           response = {
             success: true,
             message: "Login Successful",
@@ -42,5 +45,8 @@ module.exports = {
         }
       }
     );
+  },
+  validateLogin: (req, res) => {
+    res.send({ validate: true });
   },
 };

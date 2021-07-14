@@ -5,19 +5,42 @@ const cors = require("cors");
 const cheerio = require("cheerio");
 const stateData = require("./doc.json");
 const bodyParser = require("body-parser");
+const morgan = require("morgan");
+const moment = require('moment')
+const gb=require('./global.json')
 
 require("./db");
 
 const cron = require("node-cron");
 const { sendEmail } = require("./controllers/email.controller");
-cron.schedule("4 * * * *", () => {
-  axios
-    .get("https://current-fuel-price.herokuapp.com/diesel/updateNewPrice")
-    .then((result) => {
+// cron.schedule("1 * * * *", () => {
+//   axios
+//     .get("https://current-fuel-price.herokuapp.com/diesel/updateNewPrice")
+//     .then((result) => {
+//       console.log(result);
+//       sendEmail;
+//     });
+// });
+
+setInterval(() => {
+  let now = moment(moment().format("hh:mma"), "hh:mma");
+  // let beginningTime = moment("3:00pm", "hh:mma");
+  // let endTime = moment("4:00pm", "hh:mma");
+  let beginningTime = moment("2:00am", "hh:mma");
+  let endTime = moment("3:00am", "hh:mma");
+  if (now.isAfter(beginningTime) && now.isBefore(endTime)) {
+    axios.get(gb.localBaseUrl + "diesel/updateNewPriceAuto").then((result) => {
       console.log(result);
       sendEmail;
+    }).catch(error=>{
+      console.log(error)
     });
-});
+  } else {
+    console.log("not the time");
+  }
+  console.log(now);
+  },720000)
+// }, 10000);
 
 //  var cron = require("node-cron");
 
@@ -32,13 +55,15 @@ cron.schedule("4 * * * *", () => {
 //    }
 //  );
 
+
+
 let jsonData;
 
 const app = express();
 app.use(express.static("public"));
 
 app.use(cors());
-
+app.use(morgan("dev"));
 app.set("view engine", "ejs");
 app.use(
   bodyParser.urlencoded({
@@ -53,7 +78,6 @@ app.get("/sendmail", (req, res) => {
 app.use("/user", require("./routes/user"));
 app.use("/diesel", require("./routes/diesel"));
 app.use("/calculator", require("./routes/calculator"));
-
 app.get("/last_days/:dayCount", (req, res) => {
   let day;
   if (req.params.dayCount <= 0) {

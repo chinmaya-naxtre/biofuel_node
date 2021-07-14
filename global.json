@@ -1,3 +1,3 @@
 {
-  "localBaseUrl": "https://current-fuel-price.herokuapp.com/"
+  "localBaseUrl": "http://localhost:3002/"
 }
