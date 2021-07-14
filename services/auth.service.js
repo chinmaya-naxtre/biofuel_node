@@ -10,20 +10,21 @@ module.exports = {
       (err, decode) => {
         if (err) {
           res.status(401).send({ message: err.message });
-        }
-        console.log(decode);
-        const username = decode.username;
-        adminDb.find({ username: username }, (err1, docs) => {
-          if (err1) {
-            res.status(500).send({ message: err1.message });
-          } else {
-            if (docs.length > 0) {
-              next();
+        }else{
+          const username = decode.username;
+          adminDb.find({ username: username }, (err1, docs) => {
+            if (err1) {
+              res.status(500).send({ message: err1.message });
             } else {
-              res.status(401).send({ message: "Session expired" });
+              if (docs.length > 0) {
+                next();
+              } else {
+                res.status(401).send({ message: "Session expired" });
+              }
             }
-          }
-        });
+          });
+        }
+        
       }
     );
   },

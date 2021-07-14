@@ -1,7 +1,7 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const moment = require("moment");
-const { cityDb, stateDb } = require("../db");
+const { cityDb, stateDb,localDb } = require("../db");
 const stateData = require("../doc.json");
 const globalVar = require("../global.json");
 const { calculateBioFuel,calculateBioFuelPrice } = require("./common.controller");
@@ -31,14 +31,18 @@ module.exports = {
     let today = moment().format("DD-MM-YYYY");
     const states = stateData;
     const stateNames = Object.keys(stateData);
-    let responseData={};
+    let responseData = {};
     stateDb.find({ date: today }, async function (err, docs) {
       if (docs.length > 0) {
-        stateDb.remove({ date: today }, {multi: true}, function (err, numRemoved) {
-         console.log(numRemoved)
-        });
+        stateDb.remove(
+          { date: today },
+          { multi: true },
+          function (err, numRemoved) {
+            console.log(numRemoved);
+          }
+        );
       }
-      stateDb.loadDatabase()
+      stateDb.loadDatabase();
       for (let i = 0; i < stateNames.length; i++) {
         const stateName = stateNames[i];
         let cities = states[stateName];
@@ -70,9 +74,9 @@ module.exports = {
             });
           });
       }
-      responseData={
-        message:"Price Updated"
-      }
+      responseData = {
+        message: "Price Updated",
+      };
 
       res.status(200).json(responseData);
     });
@@ -86,69 +90,81 @@ module.exports = {
     let today = moment().format("DD-MM-YYYY");
     cityDb.find({ date: today }, function (err, docs) {
       if (docs.length > 0) {
-        cityDb.remove({ date: today }, {multi: true}, function (err, numRemoved) {
-          console.log(numRemoved)
-         });
-      } 
-      cityDb.loadDatabase()
+        cityDb.remove(
+          { date: today },
+          { multi: true },
+          function (err, numRemoved) {
+            console.log(numRemoved);
+          }
+        );
+      }
+      cityDb.loadDatabase();
       axios
-          .get("https://www.bankbazaar.com/fuel/diesel-price-india.html")
-          .then((result) => {
-            const $ = cheerio.load(result.data);
+        .get("https://www.bankbazaar.com/fuel/diesel-price-india.html")
+        .then((result) => {
+          const $ = cheerio.load(result.data);
 
-            $("#grey-btn > div > div > table > tbody > tr").each(
-              (index, element) => {
-                const city = $(element).find("a").text();
-                let price = $($(element).find("td")[1]).text();
-                price = price.replace("₹", "").trim();
+          $("#grey-btn > div > div > table > tbody > tr").each(
+            (index, element) => {
+              const city = $(element).find("a").text();
+              let price = $($(element).find("td")[1]).text();
+              price = price.replace("₹", "").trim();
 
-                const tableRow = { city, price };
-                scrappedData.push(tableRow);
-              }
-            );
-            dieselPriceByCity = JSON.parse(JSON.stringify(scrappedData));
-            dieselPriceByCity.splice(0, 1);
-
-            for (let i = 0; i < dieselPriceByCity.length; i++) {
-              cityDb.insert({
-                city: dieselPriceByCity[i].city,
-                price: dieselPriceByCity[i].price,
-                date: today,
-              });
+              const tableRow = { city, price };
+              scrappedData.push(tableRow);
             }
+          );
+          dieselPriceByCity = JSON.parse(JSON.stringify(scrappedData));
+          dieselPriceByCity.splice(0, 1);
 
-            res.status(200).send({ message: "City price updated" });
-          });
+          for (let i = 0; i < dieselPriceByCity.length; i++) {
+            cityDb.insert({
+              city: dieselPriceByCity[i].city,
+              price: dieselPriceByCity[i].price,
+              date: today,
+            });
+          }
+
+          res.status(200).send({ message: "City price updated" });
+        });
     });
   },
 
-
-  getInitialPrice:async(req, res)=>{
+  getInitialPrice: async (req, res) => {
     let today = moment().format("DD-MM-YYYY");
-    await stateDb
-      .find({ date: today })
-      .sort({ state: 1 })
-      .exec(async function (err, docs) {
-        // console.log(docs);
-        let data = [];
-        for (const element of docs) {
-          let bioDieselPrice = await calculateBioFuelPrice(element.dieselPrice);
+    localDb.find({ _id: "1" }, async (err, result) => {
+      if (err) {
+        res.status(500).send({ message: err.message });
+      } else {
+        let gstPer = result[0].gst;
+        await stateDb
+          .find({ date: today })
+          .sort({ state: 1 })
+          .exec(async function (err, docs) {
+            // console.log(docs);
+            let data = [];
+            for (const element of docs) {
+              let bioDieselPrice = await calculateBioFuelPrice(
+                element.dieselPrice
+              );
 
-          let newData = element;
-          newData.bioDieselPrice = bioDieselPrice;
-          newData.stateBioDieselPrice = bioDieselPrice.totalPrice;
+              let newData = element;
+              newData.bioDieselPrice = bioDieselPrice;
+              newData.stateBioDieselPrice = bioDieselPrice.totalPrice;
+              newData.gst=gstPer
 
-          data.push(newData);
-        }
-        // console.log(data);
-        await res.json(data);
-      });
+              data.push(newData);
+            }
+            // console.log(data);
+            await res.json(data);
+          });
+      }
+    });
   },
-
 
   getStateDieselPrice: async (req, res) => {
     let today = moment().format("DD-MM-YYYY");
-    
+
     // console.log(today);
     await stateDb
       .find({ date: today })
@@ -216,9 +232,8 @@ module.exports = {
     axios
       .get(globalVar.localBaseUrl + "diesel/loadDieselPriceByState")
       .then((result) => {
-        console.log(result)
+        console.log(result);
         if (result.status == 200) {
-          
           axios
             .get(globalVar.localBaseUrl + "diesel/LoadDieselPriceByCity")
             .then((result1) => {
@@ -237,13 +252,16 @@ module.exports = {
       });
   },
 
-  searchStateCity:async (req, res)=>{
-    let keyword=req.params.keyword
-    let searchVal = new RegExp(keyword, "i")
-    let stateSearch=[{ state: { $regex: searchVal } },{ cities: { $regex: searchVal } }]
+  searchStateCity: async (req, res) => {
+    let keyword = req.params.keyword;
+    let searchVal = new RegExp(keyword, "i");
+    let stateSearch = [
+      { state: { $regex: searchVal } },
+      { cities: { $regex: searchVal } },
+    ];
     let today = moment().format("DD-MM-YYYY");
     await stateDb
-      .find({$or:stateSearch})
+      .find({ $or: stateSearch })
       .sort({ state: 1 })
       .exec(async function (err, docs) {
         let data = [];
@@ -259,6 +277,5 @@ module.exports = {
         // console.log(data);
         await res.json(data);
       });
-
-  }
+  },
 };
